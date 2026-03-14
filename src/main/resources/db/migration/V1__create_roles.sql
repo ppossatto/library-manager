@@ -1,0 +1,2 @@
+CREATE ROLE IF NOT EXISTS ${librarianRole};
+CREATE ROLE IF NOT EXISTS ${userRole}
