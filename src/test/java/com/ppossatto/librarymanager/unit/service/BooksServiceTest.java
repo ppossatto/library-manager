@@ -4,7 +4,7 @@ import com.ppossatto.librarymanager.dto.response.GetBookBasicResponse;
 import com.ppossatto.librarymanager.exception.CoreException;
 import com.ppossatto.librarymanager.exception.enums.CoreExceptionType;
 import com.ppossatto.librarymanager.repository.BooksRepository;
-import com.ppossatto.librarymanager.service.impl.GetAllBooksServiceImpl;
+import com.ppossatto.librarymanager.service.impl.BooksServiceImpl;
 import com.ppossatto.librarymanager.unit.mothers.BooksEntityDaoMother;
 import jakarta.persistence.NoResultException;
 import jakarta.persistence.QueryTimeoutException;
@@ -29,13 +29,13 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
-class GetAllBooksServiceTest {
+class BooksServiceTest {
 
   @Mock
   private BooksRepository repository;
 
   @InjectMocks
-  private GetAllBooksServiceImpl service;
+  private BooksServiceImpl service;
 
   private static Pageable pageableMock;
   private static UUID uuidMock;

@@ -6,7 +6,7 @@ import com.ppossatto.librarymanager.exception.CoreException;
 import com.ppossatto.librarymanager.exception.enums.CoreExceptionType;
 import com.ppossatto.librarymanager.mapper.BooksMapper;
 import com.ppossatto.librarymanager.repository.BooksRepository;
-import com.ppossatto.librarymanager.service.GetAllBooksService;
+import com.ppossatto.librarymanager.service.BooksService;
 import jakarta.persistence.PersistenceException;
 import jakarta.persistence.QueryTimeoutException;
 import lombok.RequiredArgsConstructor;
@@ -20,7 +20,7 @@ import java.util.UUID;
 @Service
 @RequiredArgsConstructor
 @Slf4j
-public class GetAllBooksServiceImpl implements GetAllBooksService {
+public class BooksServiceImpl implements BooksService {
 
   private final BooksRepository booksRepository;
 

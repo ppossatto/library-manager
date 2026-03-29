@@ -58,5 +58,5 @@ public class UsersEntity extends CommonEntity {
   private Set<RolesEntity> rolesEntity;
 
   @Column(name = "STATUS", length = 20)
-  private String userStatus;
+  private String userStatus = "active";
 }

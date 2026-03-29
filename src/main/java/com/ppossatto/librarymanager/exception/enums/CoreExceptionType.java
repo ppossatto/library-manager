@@ -54,6 +54,24 @@ public enum CoreExceptionType {
      SeverityType.ERROR,
      "Error while creating JWT token",
      HttpStatus.INTERNAL_SERVER_ERROR
+  ),
+  EMAIL_ALREADY_EXISTS(
+     "ERR-55128",
+     SeverityType.WARNING,
+     "The given email is already stored in the database",
+     HttpStatus.CONFLICT
+  ),
+  ROLE_NOT_FOUND_EXCEPTION(
+     "ERR-61427",
+     SeverityType.ERROR,
+     "The given role '%s' was not found",
+     HttpStatus.NOT_FOUND
+  ),
+  BAD_CREDENTIALS_EXCEPTION(
+     "ERR-49001",
+     SeverityType.WARNING,
+     "The given credentials are wrong",
+     HttpStatus.UNAUTHORIZED
   );
 
   private final String errorCode;

@@ -2,7 +2,7 @@ package com.ppossatto.librarymanager.controller;
 
 import com.ppossatto.librarymanager.dto.response.GetBookBasicResponse;
 import com.ppossatto.librarymanager.dto.response.PageableResponse;
-import com.ppossatto.librarymanager.service.GetAllBooksService;
+import com.ppossatto.librarymanager.service.BooksService;
 import jakarta.validation.constraints.Positive;
 import jakarta.validation.constraints.PositiveOrZero;
 import lombok.RequiredArgsConstructor;
@@ -24,9 +24,9 @@ import java.util.UUID;
 @RequiredArgsConstructor
 @Validated
 @Slf4j
-public class GetAllBooksController {
+public class BooksController {
 
-  private final GetAllBooksService service;
+  private final BooksService service;
 
   @GetMapping
   public ResponseEntity<PageableResponse<GetBookBasicResponse>> getBooksPageable(

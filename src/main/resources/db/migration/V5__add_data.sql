@@ -68,6 +68,6 @@ VALUES (
 
 INSERT INTO PUBLIC.USER_ROLES (ROLE_ID, USER_ID)
 VALUES (
-        (SELECT id FROM roles WHERE name = 'ROLE_USER'),
+        (SELECT id FROM roles WHERE name = 'ROLE_LIBRARIAN'),
         '0b592ed4-6efe-49de-bb9b-8413ef564812'
        );

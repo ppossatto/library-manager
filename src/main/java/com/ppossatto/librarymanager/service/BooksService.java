@@ -6,7 +6,7 @@ import org.springframework.data.domain.Pageable;
 
 import java.util.UUID;
 
-public interface GetAllBooksService {
+public interface BooksService {
 
   Page<GetBookBasicResponse> getAllBooks(Pageable pageable, UUID traceId);
 }
