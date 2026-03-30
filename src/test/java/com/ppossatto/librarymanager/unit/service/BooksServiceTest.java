@@ -85,7 +85,7 @@ class BooksServiceTest {
     );
 
     assertNotNull(exception);
-    assertEquals(CoreExceptionType.GET_ALL_BOOKS_JPA_TIMEOUT_EXCEPTION, exception.getExceptionType());
+    assertEquals(CoreExceptionType.JPA_TIMEOUT_EXCEPTION, exception.getExceptionType());
     verify(repository).getAll(pageableMock);
   }
 
@@ -107,7 +107,7 @@ class BooksServiceTest {
     );
 
     assertNotNull(exception);
-    assertEquals(CoreExceptionType.GET_ALL_BOOKS_JPA_EXCEPTION, exception.getExceptionType());
+    assertEquals(CoreExceptionType.JPA_PERSISTENCE_EXCEPTION, exception.getExceptionType());
     verify(repository).getAll(pageableMock);
   }
 

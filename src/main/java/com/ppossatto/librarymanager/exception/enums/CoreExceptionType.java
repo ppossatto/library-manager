@@ -13,13 +13,13 @@ public enum CoreExceptionType {
      "Generic error, please check logs",
      HttpStatus.SERVICE_UNAVAILABLE
   ),
-  GET_ALL_BOOKS_JPA_EXCEPTION(
+  JPA_PERSISTENCE_EXCEPTION(
      "ERR-33946",
      SeverityType.ERROR,
      "Generic error fetching books from the database",
      HttpStatus.INTERNAL_SERVER_ERROR
   ),
-  GET_ALL_BOOKS_JPA_TIMEOUT_EXCEPTION(
+  JPA_TIMEOUT_EXCEPTION(
      "ERR-50729",
      SeverityType.ERROR,
      "The query exceeded the timeout limit",

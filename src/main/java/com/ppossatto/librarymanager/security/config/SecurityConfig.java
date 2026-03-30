@@ -56,6 +56,7 @@ public class SecurityConfig {
           .requestMatchers(HttpMethod.GET, "/api/v1/books/**").hasRole(ROLE_USER)
           .requestMatchers(HttpMethod.POST, "/api/v1/users").hasRole(ROLE_LIBRARIAN)
           .requestMatchers(HttpMethod.GET, "/api/v1/users").hasAnyRole(ROLE_USER, ROLE_LIBRARIAN)
+          .requestMatchers(HttpMethod.GET, "/api/v1/users/**").hasAnyRole(ROLE_USER, ROLE_LIBRARIAN)
           .anyRequest().authenticated()
        ).sessionManagement(
           session ->

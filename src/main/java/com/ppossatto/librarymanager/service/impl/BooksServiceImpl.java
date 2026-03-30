@@ -1,10 +1,9 @@
 package com.ppossatto.librarymanager.service.impl;
 
-import com.ppossatto.librarymanager.dto.domain.BookDto;
+import com.ppossatto.librarymanager.dto.response.GetBookBasicAuthorDataResponse;
 import com.ppossatto.librarymanager.dto.response.GetBookBasicResponse;
 import com.ppossatto.librarymanager.exception.CoreException;
 import com.ppossatto.librarymanager.exception.enums.CoreExceptionType;
-import com.ppossatto.librarymanager.mapper.BooksMapper;
 import com.ppossatto.librarymanager.repository.BooksRepository;
 import com.ppossatto.librarymanager.service.BooksService;
 import jakarta.persistence.PersistenceException;
@@ -16,6 +15,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -33,31 +33,34 @@ public class BooksServiceImpl implements BooksService {
             """,
          traceId);
 
-      Page<BookDto> dbResponse =
-         booksRepository
-            .getAll(pageable)
-            .map(BooksMapper::toDto);
-
-      log.debug("""
-            Returned books from database...
-            Size: {}
-            Trace ID: {}
-            """,
-         dbResponse.getContent().size(), traceId);
-
-      return dbResponse.map(BooksMapper::toBasicResponse);
+      return booksRepository
+         .getAll(pageable)
+         .map(book -> GetBookBasicResponse.builder()
+            .id(book.getBookId())
+            .title(book.getBookTitle())
+            .edition(book.getBookEdition())
+            .publishedYear(book.getBookPublishYear())
+            .authors(book.getAuthorsEntity().stream()
+               .map(
+                  author -> GetBookBasicAuthorDataResponse.builder()
+                     .id(author.getAuthorId())
+                     .name(author.getAuthorName())
+                     .build()
+               )
+               .collect(Collectors.toSet()))
+            .build());
     } catch (QueryTimeoutException e) {
       log.error("""
          Timeout error while running JPA getAll query.
          Trace ID: {}
          """, traceId);
-      throw new CoreException(CoreExceptionType.GET_ALL_BOOKS_JPA_TIMEOUT_EXCEPTION, e);
+      throw new CoreException(CoreExceptionType.JPA_TIMEOUT_EXCEPTION, e);
     } catch (PersistenceException e) {
       log.error("""
          JPA error while getting all books data.
          Trace ID: {}
          """, traceId);
-      throw new CoreException(CoreExceptionType.GET_ALL_BOOKS_JPA_EXCEPTION, e);
+      throw new CoreException(CoreExceptionType.JPA_PERSISTENCE_EXCEPTION, e);
     } catch (Exception e) {
       log.error("""
          Unexpected exception while getting all books.

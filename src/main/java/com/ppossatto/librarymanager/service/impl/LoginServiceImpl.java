@@ -29,7 +29,7 @@ public class LoginServiceImpl implements LoginService {
 
   @Override
   public LoginResponse doLogin(LoginRequest request) {
-    try{
+    try {
       log.debug("Authenticating login request");
       Authentication authentication = authenticationManager.authenticate(
          new UsernamePasswordAuthenticationToken(request.email(), request.password())
@@ -45,9 +45,9 @@ public class LoginServiceImpl implements LoginService {
          .tokenType("Bearer")
          .expiresIn(expiration)
          .build();
-    } catch (BadCredentialsException bce){
+    } catch (BadCredentialsException bce) {
       throw new CoreException(CoreExceptionType.BAD_CREDENTIALS_EXCEPTION, bce);
-    } catch (Exception e){
+    } catch (Exception e) {
       throw new CoreException(CoreExceptionType.GENERIC_ERROR, e);
     }
   }
