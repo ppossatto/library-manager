@@ -18,10 +18,14 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Objects;
+import java.util.Optional;
 import java.util.Set;
 import java.util.UUID;
 import java.util.stream.Collectors;
@@ -101,7 +105,21 @@ public class UsersServiceImpl implements UsersService {
   public GetUserResponse getUser(UUID userId) {
     log.debug("Getting user information with ID: [{}]", userId);
     try {
-      return repository.findByUserId(userId)
+      Optional<UsersEntity> userFound = repository.findByUserId(userId);
+      Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+      if(authentication == null){
+        throw new CoreException(CoreExceptionType.NOT_LOGGED_IN_EXCEPTION);
+      }
+      String authenticatedEmail = authentication.getName();
+      boolean isLibrarian = authentication.getAuthorities().stream()
+         .anyMatch(a -> Objects.equals(a.getAuthority(), "ROLE_LIBRARIAN"));
+      if(userFound.isEmpty()){
+        throw new CoreException(CoreExceptionType.USER_NOT_FOUND_EXCEPTION);
+      }
+      if (!isLibrarian && !userFound.get().getUserEmail().equals(authenticatedEmail)) {
+        throw new CoreException(CoreExceptionType.FORBIDDEN_EXCEPTION);
+      }
+      return userFound
          .map(user -> GetUserResponse.builder()
             .id(user.getUserId())
             .name(user.getUserName())
@@ -118,6 +136,8 @@ public class UsersServiceImpl implements UsersService {
             .updatedAt(user.getUpdatedAt())
             .build())
          .orElse(null);
+    } catch(CoreException ce){
+      throw ce;
     } catch (QueryTimeoutException e) {
       log.error("Timeout error while running JPA getAll query for user with ID [{}].", userId);
       throw new CoreException(CoreExceptionType.JPA_TIMEOUT_EXCEPTION, e);

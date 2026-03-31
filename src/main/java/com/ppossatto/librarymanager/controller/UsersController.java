@@ -71,7 +71,7 @@ public class UsersController {
     GetUserResponse response = service.getUser(userId);
 
     return response == null ?
-       ResponseEntity.status(HttpStatus.NO_CONTENT).build() :
+       ResponseEntity.status(HttpStatus.NOT_FOUND).build() :
        ResponseEntity.ok(response);
   }
 }

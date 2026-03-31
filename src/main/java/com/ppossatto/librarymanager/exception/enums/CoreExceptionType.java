@@ -72,6 +72,24 @@ public enum CoreExceptionType {
      SeverityType.WARNING,
      "The given credentials are wrong",
      HttpStatus.UNAUTHORIZED
+  ),
+  NOT_LOGGED_IN_EXCEPTION(
+     "ERR-71451",
+     SeverityType.WARNING,
+     "Authentication required",
+     HttpStatus.UNAUTHORIZED
+  ),
+  FORBIDDEN_EXCEPTION(
+     "ERR-81945",
+     SeverityType.WARNING,
+     "No permission to access this resource",
+     HttpStatus.FORBIDDEN
+  ),
+  USER_NOT_FOUND_EXCEPTION(
+     "ERR-20955",
+     SeverityType.WARNING,
+     "The user email was not found in the database for authentication",
+     HttpStatus.NOT_FOUND
   );
 
   private final String errorCode;
