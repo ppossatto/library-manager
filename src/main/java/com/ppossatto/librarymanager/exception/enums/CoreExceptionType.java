@@ -90,6 +90,30 @@ public enum CoreExceptionType {
      SeverityType.WARNING,
      "The user email was not found in the database for authentication",
      HttpStatus.NOT_FOUND
+  ),
+  WRONG_PASSWORD_EXCEPTION(
+     "ERR-41138",
+     SeverityType.WARNING,
+     "The given password is incorrect",
+     HttpStatus.UNAUTHORIZED
+  ),
+  USER_HAS_ACTIVE_RESERVATIONS_EXCEPTION(
+     "ERR-91424",
+     SeverityType.WARNING,
+     "There are active reservations for the given user",
+     HttpStatus.CONFLICT
+  ),
+  SAME_USER_OPERATION_EXCEPTION(
+     "ERR-77514",
+     SeverityType.WARNING,
+     "The user cannot perform a self-operation",
+     HttpStatus.UNPROCESSABLE_CONTENT
+  ),
+  CHANGE_OTHER_USER_EMAIL_EXCEPTION(
+     "ERR-40411",
+     SeverityType.WARNING,
+     "A person with an user role must change their own email",
+     HttpStatus.FORBIDDEN
   );
 
   private final String errorCode;

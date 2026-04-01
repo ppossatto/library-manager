@@ -41,3 +41,7 @@ security:
   jwt:
     secret: 33OL23Q2FEOBVUQ5E4VIACSI75XCI54BP1JTI0KA5OO3XTSYHB2ZYYM0E5VYJHUK
     expiration: 3600000 # 1h
+
+scheduler:
+  cleanup:
+    users: 0 0 3 * * *

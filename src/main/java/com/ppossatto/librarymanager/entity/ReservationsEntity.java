@@ -35,7 +35,7 @@ public class ReservationsEntity extends CommonEntity {
 
   @ManyToOne
   @JoinColumn(name = "USER_ID", nullable = false)
-  private UsersEntity usersDao;
+  private UsersEntity usersEntity;
 
   @Column(name = "RESERVATION_DATE", updatable = false, insertable = false)
   private LocalDate reservationDate;

@@ -55,8 +55,14 @@ public class SecurityConfig {
           .requestMatchers(HttpMethod.GET, "/api/v1/books").permitAll()
           .requestMatchers(HttpMethod.GET, "/api/v1/books/**").hasRole(ROLE_USER)
           .requestMatchers(HttpMethod.POST, "/api/v1/users").hasRole(ROLE_LIBRARIAN)
-          .requestMatchers(HttpMethod.GET, "/api/v1/users").hasAnyRole(ROLE_USER, ROLE_LIBRARIAN)
+          .requestMatchers(HttpMethod.GET, "/api/v1/users").hasRole(ROLE_LIBRARIAN)
           .requestMatchers(HttpMethod.GET, "/api/v1/users/**").hasAnyRole(ROLE_USER, ROLE_LIBRARIAN)
+          .requestMatchers(HttpMethod.PATCH, "/api/v1/users/**").hasAnyRole(ROLE_USER, ROLE_LIBRARIAN)
+          .requestMatchers(HttpMethod.PATCH, "/api/v1/users/**/password").hasAnyRole(ROLE_USER, ROLE_LIBRARIAN)
+          .requestMatchers(HttpMethod.DELETE, "/api/v1/users/**").hasRole(ROLE_LIBRARIAN)
+          .requestMatchers(HttpMethod.PATCH, "/api/v1/users/**/block").hasRole(ROLE_LIBRARIAN)
+          .requestMatchers(HttpMethod.PATCH, "/api/v1/users/**/role").hasRole(ROLE_LIBRARIAN)
+          .requestMatchers(HttpMethod.PATCH, "/api/v1/users/**/email").hasAnyRole(ROLE_USER, ROLE_LIBRARIAN)
           .anyRequest().authenticated()
        ).sessionManagement(
           session ->
