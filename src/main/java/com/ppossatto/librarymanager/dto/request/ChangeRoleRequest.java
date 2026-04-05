@@ -7,4 +7,5 @@ import lombok.Builder;
 public record ChangeRoleRequest(
    @NotBlank(message = "The role field must be provided")
    String role
-) {}
+) {
+}

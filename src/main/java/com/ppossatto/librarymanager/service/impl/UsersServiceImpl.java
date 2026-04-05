@@ -98,6 +98,7 @@ public class UsersServiceImpl implements UsersService {
   }
 
   @Override
+  @Transactional(readOnly = true)
   public Page<GetUsersResponse> getAllUsers(Pageable pageable) {
     log.debug("Get all users request in service");
     try {
@@ -121,6 +122,7 @@ public class UsersServiceImpl implements UsersService {
   }
 
   @Override
+  @Transactional(readOnly = true)
   public GetUserResponse getUser(UUID userId) {
     log.debug("Getting user information with ID: [{}]", userId);
     try {
@@ -156,37 +158,11 @@ public class UsersServiceImpl implements UsersService {
     }
   }
 
-  private Optional<UsersEntity> getUserIfAuthorizedOrLibrarianRole(UUID userId) {
-    Optional<UsersEntity> userFound = repository.findByUserId(userId);
-    Authentication authentication = getAuthentication();
-    String authenticatedEmail = authentication.getName();
-    if(userFound.isEmpty()){
-      throw new CoreException(CoreExceptionType.USER_NOT_FOUND_EXCEPTION);
-    }
-    if (!isLibrarian(authentication) && !userFound.get().getUserEmail().equals(authenticatedEmail)) {
-      throw new CoreException(CoreExceptionType.FORBIDDEN_EXCEPTION);
-    }
-    return userFound;
-  }
-
-  private static Authentication getAuthentication() {
-    Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-    if(authentication == null){
-      throw new CoreException(CoreExceptionType.NOT_LOGGED_IN_EXCEPTION);
-    }
-    return authentication;
-  }
-
-  private static boolean isLibrarian(Authentication authentication) {
-    return authentication.getAuthorities().stream()
-       .anyMatch(a -> Objects.equals(a.getAuthority(), ROLE_LIBRARIAN));
-  }
-
   @Override
   @Transactional
   public UpdateUserResponse updateUser(UUID userId, UpdateUserRequest request) {
     log.debug("Update user information with ID: [{}]", userId);
-    try{
+    try {
       Optional<UsersEntity> userFound = getUserIfAuthorizedOrLibrarianRole(userId);
       UsersEntity user = userFound.get();
       user.setUserName(request.name());
@@ -216,11 +192,11 @@ public class UsersServiceImpl implements UsersService {
   @Transactional
   public void updatePassword(UUID userId, UpdatePasswordRequest request) {
     log.debug("Update user password for user with ID: [{}]", userId);
-    try{
+    try {
       Optional<UsersEntity> userFound = getUserIfAuthorizedOrLibrarianRole(userId);
       UsersEntity user = userFound.get();
-      if(!isLibrarian(getAuthentication()) &&
-         !encoder.matches(request.oldPassword(), user.getUserPassword())){
+      if (!isLibrarian(getAuthentication()) &&
+         !encoder.matches(request.oldPassword(), user.getUserPassword())) {
         throw new CoreException(CoreExceptionType.WRONG_PASSWORD_EXCEPTION);
       }
       user.setUserPassword(encoder.encode(request.newPassword()));
@@ -243,12 +219,12 @@ public class UsersServiceImpl implements UsersService {
   @Transactional
   public void softDeleteUser(UUID userId) {
     log.debug("Soft delete user with ID: [{}]", userId);
-    try{
+    try {
       Optional<UsersEntity> userFound = repository.findByUserId(userId);
       UsersEntity user = userFound.orElseThrow(
          () -> new CoreException(CoreExceptionType.USER_NOT_FOUND_EXCEPTION)
       );
-      if(reservationsRepository.hasActiveOrOverdueReservations(userId)){
+      if (reservationsRepository.hasActiveOrOverdueReservations(userId)) {
         throw new CoreException(CoreExceptionType.USER_HAS_ACTIVE_RESERVATIONS_EXCEPTION);
       }
       user.setInactiveDateTime(LocalDateTime.now());
@@ -272,12 +248,12 @@ public class UsersServiceImpl implements UsersService {
   @Transactional
   public void blockUser(UUID userId) {
     log.debug("Blocking user with ID: [{}]", userId);
-    try{
+    try {
       UsersEntity userFound = repository.findByUserId(userId).orElseThrow(
          () -> new CoreException(CoreExceptionType.USER_NOT_FOUND_EXCEPTION)
       );
       Authentication authentication = getAuthentication();
-      if(userFound.getUserEmail().equals(authentication.getName())){
+      if (userFound.getUserEmail().equals(authentication.getName())) {
         throw new CoreException(CoreExceptionType.SAME_USER_OPERATION_EXCEPTION);
       }
       userFound.setUserStatus(UserStatus.BLOCKED.getCode());
@@ -300,12 +276,12 @@ public class UsersServiceImpl implements UsersService {
   @Transactional
   public void changeUserRole(UUID userId, ChangeRoleRequest request) {
     log.debug("Changing user role with ID: [{}]", userId);
-    try{
+    try {
       UsersEntity userFound = repository.findByUserId(userId).orElseThrow(
          () -> new CoreException(CoreExceptionType.USER_NOT_FOUND_EXCEPTION)
       );
       Authentication authentication = getAuthentication();
-      if(userFound.getUserEmail().equals(authentication.getName())){
+      if (userFound.getUserEmail().equals(authentication.getName())) {
         throw new CoreException(CoreExceptionType.SAME_USER_OPERATION_EXCEPTION);
       }
       RolesEntity role = rolesRepository.findByRoleName(request.role()).orElseThrow(
@@ -333,26 +309,26 @@ public class UsersServiceImpl implements UsersService {
   @Transactional
   public ChangeEmailResponse changeEmail(UUID userId, ChangeEmailRequest request) {
     log.debug("Changing email for user with ID: [{}]", userId);
-    try{
+    try {
       UsersEntity userFound = repository.findByUserId(userId).orElseThrow(
          () -> new CoreException(CoreExceptionType.USER_NOT_FOUND_EXCEPTION)
       );
       Authentication authentication = getAuthentication();
-      if(!isLibrarian(authentication) && !userFound.getUserEmail().equals(authentication.getName())){
+      if (!isLibrarian(authentication) && !userFound.getUserEmail().equals(authentication.getName())) {
         throw new CoreException(CoreExceptionType.CHANGE_OTHER_USER_EMAIL_EXCEPTION);
       }
-      if(!isLibrarian(authentication) &&
-         !encoder.matches(request.password(), userFound.getUserPassword())){
+      if (!isLibrarian(authentication) &&
+         !encoder.matches(request.password(), userFound.getUserPassword())) {
         throw new CoreException(CoreExceptionType.WRONG_PASSWORD_EXCEPTION);
       }
-      if(repository.existsByUserEmail(request.newEmail())){
+      if (repository.existsByUserEmail(request.newEmail())) {
         throw new CoreException(CoreExceptionType.EMAIL_ALREADY_EXISTS);
       }
       userFound.setUserEmail(request.newEmail());
       UsersEntity savedUser = repository.save(userFound);
 
       String newToken = null;
-      if(!isLibrarian(authentication)){
+      if (!isLibrarian(authentication)) {
         UserDetails updatedUserDetails = userDetailsService.loadUserByUsername(savedUser.getUserEmail());
         newToken = jwtService.generateToken(updatedUserDetails);
       }
@@ -376,5 +352,31 @@ public class UsersServiceImpl implements UsersService {
       log.error("Unexpected exception while changing user email with ID [{}].", userId);
       throw new CoreException(CoreExceptionType.GENERIC_ERROR, e);
     }
+  }
+
+  private Optional<UsersEntity> getUserIfAuthorizedOrLibrarianRole(UUID userId) {
+    Optional<UsersEntity> userFound = repository.findByUserId(userId);
+    Authentication authentication = getAuthentication();
+    String authenticatedEmail = authentication.getName();
+    if (userFound.isEmpty()) {
+      throw new CoreException(CoreExceptionType.USER_NOT_FOUND_EXCEPTION);
+    }
+    if (!isLibrarian(authentication) && !userFound.get().getUserEmail().equals(authenticatedEmail)) {
+      throw new CoreException(CoreExceptionType.FORBIDDEN_EXCEPTION);
+    }
+    return userFound;
+  }
+
+  private static Authentication getAuthentication() {
+    Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+    if (authentication == null) {
+      throw new CoreException(CoreExceptionType.NOT_LOGGED_IN_EXCEPTION);
+    }
+    return authentication;
+  }
+
+  private static boolean isLibrarian(Authentication authentication) {
+    return authentication.getAuthorities().stream()
+       .anyMatch(a -> Objects.equals(a.getAuthority(), ROLE_LIBRARIAN));
   }
 }

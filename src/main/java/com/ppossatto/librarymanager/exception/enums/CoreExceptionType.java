@@ -114,6 +114,66 @@ public enum CoreExceptionType {
      SeverityType.WARNING,
      "A person with an user role must change their own email",
      HttpStatus.FORBIDDEN
+  ),
+  BOOK_NOT_FOUND_EXCEPTION(
+     "ERR-50014",
+     SeverityType.WARNING,
+     "No book with ID '%s' was found",
+     HttpStatus.NOT_FOUND
+  ),
+  AUTHOR_NOT_FOUND_EXCEPTION(
+     "ERR-61559",
+     SeverityType.WARNING,
+     "Author with ID '%s' was not found",
+     HttpStatus.NOT_FOUND
+  ),
+  INVALID_PUBLISH_YEAR_EXCEPTION(
+     "ERR-74461",
+     SeverityType.WARNING,
+     "The publish year cannot be a future year",
+     HttpStatus.BAD_REQUEST
+  ),
+  ISBN_ALREADY_EXISTS(
+     "ERR-99148",
+     SeverityType.WARNING,
+     "The inserted book ISBN already exists",
+     HttpStatus.CONFLICT
+  ),
+  BOOK_HAS_ACTIVE_RESERVATIONS_EXCEPTION(
+     "ERR-91154",
+     SeverityType.WARNING,
+     "The book set to delete has active reservation",
+     HttpStatus.CONFLICT
+  ),
+  AUTHOR_ALREADY_IN_BOOK_EXCEPTION(
+     "ERR-55143",
+     SeverityType.WARNING,
+     "The book already has the author with ID '%s'",
+     HttpStatus.CONFLICT
+  ),
+  AUTHOR_NOT_IN_BOOK_EXCEPTION(
+     "ERR-51449",
+     SeverityType.WARNING,
+     "The book does not have the author with ID '%s'",
+     HttpStatus.NOT_FOUND
+  ),
+  BOOK_MUST_HAVE_AT_LEAST_ONE_AUTHOR_EXCEPTION(
+     "ERR-29956",
+     SeverityType.WARNING,
+     "The book must have at least one author",
+     HttpStatus.CONFLICT
+  ),
+  AUTHOR_ALREADY_EXISTS_EXCEPTION(
+     "ERR-89910",
+     SeverityType.WARNING,
+     "Author with name '%s' already exists in database",
+     HttpStatus.CONFLICT
+  ),
+  AUTHOR_HAS_BOOKS_EXCEPTION(
+     "ERR-21539",
+     SeverityType.WARNING,
+     "Author with id '%s' has book(s) active in the database",
+     HttpStatus.CONFLICT
   );
 
   private final String errorCode;

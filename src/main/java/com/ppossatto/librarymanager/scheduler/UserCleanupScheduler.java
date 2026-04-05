@@ -24,7 +24,7 @@ public class UserCleanupScheduler {
   @Transactional
   void cleanOldInactiveUsers() {
     log.debug("Cleaning old inactive users");
-    try{
+    try {
       long inactiveUsers = usersRepository.deleteInactiveUsersOlderThan(LocalDateTime.now().minusMonths(6));
       log.info("Inactive users deleted: {}", inactiveUsers);
     } catch (QueryTimeoutException e) {

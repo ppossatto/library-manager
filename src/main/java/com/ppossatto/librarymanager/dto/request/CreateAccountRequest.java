@@ -7,8 +7,8 @@ import lombok.Builder;
 
 @Builder
 public record CreateAccountRequest(
-   @NotBlank(message = "The field name must be provided")
-   @Size(max = 150, message = "The name cannot have more than 150 characters")
+   @NotBlank(message = "The field title must be provided")
+   @Size(max = 150, message = "The title cannot have more than 150 characters")
    String name,
    @NotBlank(message = "The field email must be provided")
    @Email(message = "The given email does not have the correct format")

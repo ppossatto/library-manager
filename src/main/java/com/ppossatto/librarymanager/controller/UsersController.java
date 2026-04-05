@@ -67,12 +67,10 @@ public class UsersController {
   ) {
     Page<GetUsersResponse> responsePage = service.getAllUsers(PageRequest.of(page, size));
 
-    return responsePage.hasContent()
-       ? ResponseEntity.ok(PageableResponse.from(responsePage))
-       : ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+    return ResponseEntity.ok(PageableResponse.from(responsePage));
   }
 
-  @GetMapping("/{id}")
+  @GetMapping("{id}")
   public ResponseEntity<GetUserResponse> getSingleUser(
      @PathVariable("id") UUID userId
   ) {
@@ -89,7 +87,7 @@ public class UsersController {
      @RequestBody
      UpdateUserRequest updateUserRequest,
      @PathVariable("id") UUID userId
-  ){
+  ) {
     return ResponseEntity.ok(service.updateUser(userId, updateUserRequest));
   }
 
@@ -99,7 +97,7 @@ public class UsersController {
      @Valid
      @RequestBody
      UpdatePasswordRequest updatePasswordRequest
-  ){
+  ) {
     service.updatePassword(userId, updatePasswordRequest);
     return ResponseEntity.noContent().build();
   }
@@ -107,7 +105,7 @@ public class UsersController {
   @DeleteMapping("{id}")
   public ResponseEntity<Void> deleteUser(
      @PathVariable("id") UUID userId
-  ){
+  ) {
     service.softDeleteUser(userId);
     return ResponseEntity.noContent().build();
   }
@@ -115,7 +113,7 @@ public class UsersController {
   @PatchMapping("{id}/block")
   public ResponseEntity<Void> blockUser(
      @PathVariable("id") UUID userId
-  ){
+  ) {
     service.blockUser(userId);
     return ResponseEntity.noContent().build();
   }
@@ -124,7 +122,7 @@ public class UsersController {
   public ResponseEntity<Void> changeUserRole(
      @PathVariable("id") UUID userId,
      @Valid @RequestBody ChangeRoleRequest changeRoleRequest
-     ){
+  ) {
     service.changeUserRole(userId, changeRoleRequest);
     return ResponseEntity.noContent().build();
   }
@@ -133,10 +131,10 @@ public class UsersController {
   public ResponseEntity<ChangeEmailResponse> changeEmail(
      @PathVariable("id") UUID userId,
      @Valid @RequestBody ChangeEmailRequest changeEmailRequest
-  ){
+  ) {
     return ResponseEntity.ok(service.changeEmail(userId, changeEmailRequest));
   }
 
   // TODO: Cron job to delete users inactive for more than 6 months (users must not have any active book)
-    // No endpoint needed
+  // No endpoint needed
 }
