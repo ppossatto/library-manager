@@ -48,3 +48,15 @@ scheduler:
 
 reservation:
   period: 7 # days
+
+springdoc:
+  api-docs:
+    path: /api-docs
+    enabled: true
+
+  swagger-ui:
+    path: /swagger-ui.html
+    enabled: true
+    operations-sorter: method
+    syntax-highlight:
+      activated: true
