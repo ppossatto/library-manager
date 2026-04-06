@@ -19,6 +19,7 @@ import com.ppossatto.librarymanager.repository.ReservationsRepository;
 import com.ppossatto.librarymanager.repository.RolesRepository;
 import com.ppossatto.librarymanager.repository.UsersRepository;
 import com.ppossatto.librarymanager.security.service.JwtService;
+import com.ppossatto.librarymanager.security.utils.SecurityUtils;
 import com.ppossatto.librarymanager.service.UsersService;
 import jakarta.persistence.PersistenceException;
 import jakarta.persistence.QueryTimeoutException;
@@ -53,6 +54,7 @@ public class UsersServiceImpl implements UsersService {
   private final ReservationsRepository reservationsRepository;
   private final UserDetailsService userDetailsService;
   private final JwtService jwtService;
+  private final SecurityUtils securityUtils;
 
   private static final String ROLE_USER = "ROLE_USER";
   private static final String ROLE_LIBRARIAN = "ROLE_LIBRARIAN";
@@ -195,7 +197,7 @@ public class UsersServiceImpl implements UsersService {
     try {
       Optional<UsersEntity> userFound = getUserIfAuthorizedOrLibrarianRole(userId);
       UsersEntity user = userFound.get();
-      if (!isLibrarian(getAuthentication()) &&
+      if (!securityUtils.isLibrarian() &&
          !encoder.matches(request.oldPassword(), user.getUserPassword())) {
         throw new CoreException(CoreExceptionType.WRONG_PASSWORD_EXCEPTION);
       }
@@ -252,7 +254,7 @@ public class UsersServiceImpl implements UsersService {
       UsersEntity userFound = repository.findByUserId(userId).orElseThrow(
          () -> new CoreException(CoreExceptionType.USER_NOT_FOUND_EXCEPTION)
       );
-      Authentication authentication = getAuthentication();
+      Authentication authentication = securityUtils.getAuthentication();
       if (userFound.getUserEmail().equals(authentication.getName())) {
         throw new CoreException(CoreExceptionType.SAME_USER_OPERATION_EXCEPTION);
       }
@@ -280,7 +282,7 @@ public class UsersServiceImpl implements UsersService {
       UsersEntity userFound = repository.findByUserId(userId).orElseThrow(
          () -> new CoreException(CoreExceptionType.USER_NOT_FOUND_EXCEPTION)
       );
-      Authentication authentication = getAuthentication();
+      Authentication authentication = securityUtils.getAuthentication();
       if (userFound.getUserEmail().equals(authentication.getName())) {
         throw new CoreException(CoreExceptionType.SAME_USER_OPERATION_EXCEPTION);
       }
@@ -313,11 +315,11 @@ public class UsersServiceImpl implements UsersService {
       UsersEntity userFound = repository.findByUserId(userId).orElseThrow(
          () -> new CoreException(CoreExceptionType.USER_NOT_FOUND_EXCEPTION)
       );
-      Authentication authentication = getAuthentication();
-      if (!isLibrarian(authentication) && !userFound.getUserEmail().equals(authentication.getName())) {
+      Authentication authentication = securityUtils.getAuthentication();
+      if (!securityUtils.isLibrarian() && !userFound.getUserEmail().equals(authentication.getName())) {
         throw new CoreException(CoreExceptionType.CHANGE_OTHER_USER_EMAIL_EXCEPTION);
       }
-      if (!isLibrarian(authentication) &&
+      if (!securityUtils.isLibrarian() &&
          !encoder.matches(request.password(), userFound.getUserPassword())) {
         throw new CoreException(CoreExceptionType.WRONG_PASSWORD_EXCEPTION);
       }
@@ -328,7 +330,7 @@ public class UsersServiceImpl implements UsersService {
       UsersEntity savedUser = repository.save(userFound);
 
       String newToken = null;
-      if (!isLibrarian(authentication)) {
+      if (!securityUtils.isLibrarian()) {
         UserDetails updatedUserDetails = userDetailsService.loadUserByUsername(savedUser.getUserEmail());
         newToken = jwtService.generateToken(updatedUserDetails);
       }
@@ -356,27 +358,14 @@ public class UsersServiceImpl implements UsersService {
 
   private Optional<UsersEntity> getUserIfAuthorizedOrLibrarianRole(UUID userId) {
     Optional<UsersEntity> userFound = repository.findByUserId(userId);
-    Authentication authentication = getAuthentication();
+    Authentication authentication = securityUtils.getAuthentication();
     String authenticatedEmail = authentication.getName();
     if (userFound.isEmpty()) {
       throw new CoreException(CoreExceptionType.USER_NOT_FOUND_EXCEPTION);
     }
-    if (!isLibrarian(authentication) && !userFound.get().getUserEmail().equals(authenticatedEmail)) {
+    if (!securityUtils.isLibrarian() && !userFound.get().getUserEmail().equals(authenticatedEmail)) {
       throw new CoreException(CoreExceptionType.FORBIDDEN_EXCEPTION);
     }
     return userFound;
-  }
-
-  private static Authentication getAuthentication() {
-    Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-    if (authentication == null) {
-      throw new CoreException(CoreExceptionType.NOT_LOGGED_IN_EXCEPTION);
-    }
-    return authentication;
-  }
-
-  private static boolean isLibrarian(Authentication authentication) {
-    return authentication.getAuthorities().stream()
-       .anyMatch(a -> Objects.equals(a.getAuthority(), ROLE_LIBRARIAN));
   }
 }

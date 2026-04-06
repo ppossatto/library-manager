@@ -45,3 +45,6 @@ security:
 scheduler:
   cleanup:
     users: 0 0 3 * * *
+
+reservation:
+  period: 7 # days

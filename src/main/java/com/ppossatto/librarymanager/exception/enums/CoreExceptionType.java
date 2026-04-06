@@ -174,6 +174,36 @@ public enum CoreExceptionType {
      SeverityType.WARNING,
      "Author with id '%s' has book(s) active in the database",
      HttpStatus.CONFLICT
+  ),
+  RESERVATION_NOT_FOUND_EXCEPTION(
+     "ERR-22147",
+     SeverityType.WARNING,
+     "No reservation with id '%s' was found",
+     HttpStatus.NOT_FOUND
+  ),
+  USER_ID_NOT_FOUND_EXCEPTION(
+     "ERR-20956",
+     SeverityType.WARNING,
+     "The user with ID '%s' was not found in the database",
+     HttpStatus.NOT_FOUND
+  ),
+  INACTIVE_USER_EXCEPTION(
+     "ERR-04511",
+     SeverityType.WARNING,
+     "The user cannot operate a reservation because it's inactive",
+     HttpStatus.CONFLICT
+  ),
+  BLOCKED_USER_EXCEPTION(
+     "ERR-04512",
+     SeverityType.WARNING,
+     "The user cannot operate a reservation because it's blocked",
+     HttpStatus.CONFLICT
+  ),
+  RESERVATION_ALREADY_RETURNED_EXCEPTION(
+     "ERR-71387",
+     SeverityType.WARNING,
+     "The reservation with ID '%s' already has the book returned",
+     HttpStatus.CONFLICT
   );
 
   private final String errorCode;

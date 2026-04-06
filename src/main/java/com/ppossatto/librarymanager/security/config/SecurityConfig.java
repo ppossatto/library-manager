@@ -71,6 +71,11 @@ public class SecurityConfig {
           .requestMatchers(HttpMethod.POST, "/api/v1/authors").hasRole(ROLE_LIBRARIAN)
           .requestMatchers(HttpMethod.PATCH, "/api/v1/authors/**").hasRole(ROLE_LIBRARIAN)
           .requestMatchers(HttpMethod.DELETE, "/api/v1/authors/**").hasRole(ROLE_LIBRARIAN)
+          .requestMatchers(HttpMethod.GET, "/api/v1/reservations").hasRole(ROLE_LIBRARIAN)
+          .requestMatchers(HttpMethod.GET, "/api/v1/reservations/my").hasRole(ROLE_USER)
+          .requestMatchers(HttpMethod.GET, "/api/v1/reservations/**").hasAnyRole(ROLE_USER, ROLE_LIBRARIAN)
+          .requestMatchers(HttpMethod.POST, "/api/v1/reservations").hasRole(ROLE_LIBRARIAN)
+          .requestMatchers(HttpMethod.PATCH, "/api/v1/reservations/**/return").hasRole(ROLE_LIBRARIAN)
           .anyRequest().authenticated()
        ).sessionManagement(
           session ->
