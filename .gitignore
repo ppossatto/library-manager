@@ -35,3 +35,8 @@ build/
 ### Database ###
 /db
 /db/*
+
+### TLS ###
+keystore.p12
+*.pem
+*.key
