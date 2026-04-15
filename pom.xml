@@ -97,6 +97,11 @@
 			<artifactId>spring-boot-starter-webmvc-test</artifactId>
 			<scope>test</scope>
 		</dependency>
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-restclient</artifactId>
+			<scope>test</scope>
+		</dependency>
 	</dependencies>
 
 	<build>
@@ -133,9 +138,17 @@
 				<version>0.8.14</version>
 				<configuration>
 					<excludes>
-						<exclude>**/dto/**</exclude>
+						<exclude>**/dto/request/**</exclude>
+						<exclude>**/dto/response/**</exclude>
 						<exclude>**/entity/**</exclude>
 						<exclude>**/config/**</exclude>
+						<exclude>**/exception/**</exclude>
+						<exclude>**/scheduler/**</exclude>
+						<exclude>**/controller/advice/**</exclude>
+						<exclude>**/repository/**</exclude>
+						<exclude>
+							com/ppossatto/librarymanager/Application.class
+						</exclude>
 					</excludes>
 				</configuration>
 				<executions>

@@ -41,7 +41,7 @@ public class GlobalExceptionHandler {
     Map<String, String> errorResponse = Map.of(
        "errorCode", exceptionType.getErrorCode(),
        "severity", exceptionType.getSeverityType().name(),
-       "details", exceptionType.getDetails()
+       "details", ex.getMessage()
     );
     return ResponseEntity.status(exceptionType.getStatus()).body(errorResponse);
   }

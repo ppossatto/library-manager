@@ -5,7 +5,6 @@ import com.ppossatto.librarymanager.dto.request.UpdateAuthorRequest;
 import com.ppossatto.librarymanager.dto.response.CreateAuthorResponse;
 import com.ppossatto.librarymanager.dto.response.GetAllAuthorsResponse;
 import com.ppossatto.librarymanager.dto.response.GetAuthorResponse;
-import com.ppossatto.librarymanager.dto.response.GetBookResponse;
 import com.ppossatto.librarymanager.dto.response.PageableResponse;
 import com.ppossatto.librarymanager.dto.response.UpdateAuthorResponse;
 import com.ppossatto.librarymanager.service.AuthorsService;
@@ -17,8 +16,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.slf4j.MDC;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
-import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -66,7 +64,7 @@ public class AuthorsController {
        name != null ? name : "-");
     Page<GetAllAuthorsResponse> response = authorsService.getAllAuthors(PageRequest.of(page, size), name);
 
-    return ResponseEntity.ok(PageableResponse.from(response));
+    return ResponseEntity.ok().contentType(MediaType.APPLICATION_JSON).body(PageableResponse.from(response));
   }
 
   @GetMapping("{id}")
@@ -75,7 +73,7 @@ public class AuthorsController {
   ){
     MDC.put(TRACE_ID, UUID.randomUUID().toString());
     log.info("Get author with id [{}] requested...",authorId);
-    return ResponseEntity.ok(authorsService.getAuthorById(authorId));
+    return ResponseEntity.ok().contentType(MediaType.APPLICATION_JSON).body(authorsService.getAuthorById(authorId));
   }
 
   @PostMapping

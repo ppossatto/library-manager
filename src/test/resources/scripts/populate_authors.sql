@@ -1,0 +1,16 @@
+INSERT INTO AUTHORS (ID, NAME, BIRTH_DATE, NATIONALITY, BIOGRAPHY) VALUES
+('11111111-1111-1111-1111-111111111111', 'J.K. Rowling', '1965-07-31', 'British', 'Author of Harry Potter series.'),
+('22222222-2222-2222-2222-222222222222', 'George R.R. Martin', '1948-09-20', 'American', 'Author of A Song of Ice and Fire.'),
+('33333333-3333-3333-3333-333333333333', 'J.R.R. Tolkien', '1892-01-03', 'British', 'Author of The Lord of the Rings.'),
+('44444444-4444-4444-4444-444444444444', 'Agatha Christie', '1890-09-15', 'British', 'Queen of detective fiction.'),
+('55555555-5555-5555-5555-555555555555', 'Stephen King', '1947-09-21', 'American', 'Master of horror and suspense.'),
+('66666666-6666-6666-6666-666666666666', 'Jane Austen', '1775-12-16', 'British', 'Author of Pride and Prejudice.'),
+('77777777-7777-7777-7777-777777777777', 'Gabriel García Márquez', '1927-03-06', 'Colombian', 'Father of magical realism.'),
+('88888888-8888-8888-8888-888888888888', 'Haruki Murakami', '1949-01-12', 'Japanese', 'Internationally acclaimed Japanese writer.'),
+('99999999-9999-9999-9999-999999999999', 'Margaret Atwood', '1939-11-18', 'Canadian', 'Author of The Handmaid''s Tale.'),
+('aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa', 'Neil Gaiman', '1960-11-10', 'British', 'Author of American Gods and Coraline.'),
+('bbbbbbbb-bbbb-bbbb-bbbb-bbbbbbbbbbbb', 'Terry Pratchett', '1948-04-28', 'British', 'Creator of the Discworld series.'),
+('cccccccc-cccc-cccc-cccc-cccccccccccc', 'Isabel Allende', '1942-08-02', 'Chilean', 'Author of The House of the Spirits.'),
+('dddddddd-dddd-dddd-dddd-dddddddddddd', 'Dan Brown', '1964-06-22', 'American', 'Author of The Da Vinci Code.'),
+('eeeeeeee-eeee-eeee-eeee-eeeeeeeeeeee', 'Paulo Coelho', '1947-08-24', 'Brazilian', 'Author of The Alchemist.'),
+('ffffffff-ffff-ffff-ffff-ffffffffffff', 'Chimamanda Ngozi Adichie', '1977-09-15', 'Nigerian', 'Author of Americanah and Half of a Yellow Sun.');

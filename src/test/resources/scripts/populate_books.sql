@@ -1,0 +1,33 @@
+INSERT INTO BOOKS (TITLE, ISBN, PUBLISH_YEAR, EDITION, SYNOPSIS, TOTAL_PAGES) VALUES
+('Harry Potter and the Philosopher''s Stone', '9780747532699', 1997, '1st Edition', 'A young wizard discovers his magical heritage and attends Hogwarts School of Witchcraft and Wizardry.', 223),
+('Harry Potter and the Chamber of Secrets', '9780439064866', 1998, '1st Edition', 'Harry returns to Hogwarts and discovers a mysterious chamber that has been opened.', 251),
+('A Game of Thrones', '9780553103540', 1996, '1st Edition', 'Noble families vie for control of the Seven Kingdoms of Westeros.', 694),
+('The Hobbit', '9780547928227', 1937, '1st Edition', 'A hobbit named Bilbo Baggins embarks on an epic quest to reclaim a treasure guarded by a dragon.', 310),
+('The Lord of the Rings: The Fellowship of the Ring', '9780547928210', 1954, '1st Edition', 'A young hobbit must destroy a powerful ring before it falls into the hands of the Dark Lord.', 423),
+('Murder on the Orient Express', '9780062693662', 1934, '1st Edition', 'Detective Hercule Poirot solves a murder aboard the luxurious Orient Express.', 256),
+('The Shining', '9780385121675', 1977, '1st Edition', 'A family becomes trapped in an isolated hotel during winter, where the father descends into madness.', 447),
+('Pride and Prejudice', '9780141439518', 1813, '1st Edition', 'The romantic clash between the opinionated Elizabeth Bennet and the proud Mr. Darcy.', 279),
+('One Hundred Years of Solitude', '9780060883287', 1967, '1st Edition', 'The multi-generational story of the Buendía family in the fictional town of Macondo.', 417),
+('Norwegian Wood', '9780375704024', 1987, '1st Edition', 'A nostalgic story of love and loss set in 1960s Tokyo.', 296),
+('The Handmaid''s Tale', '9780385490818', 1985, '1st Edition', 'A dystopian novel set in a totalitarian society where women are subjugated.', 311),
+('American Gods', '9780380789030', 2001, '1st Edition', 'A war brewing between the Old Gods and the New Gods in modern America.', 465),
+('The Alchemist', '9780062502174', 1988, '25th Anniversary Edition', 'A shepherd boy journeys from Spain to Egypt in search of a treasure.', 208),
+('The Da Vinci Code', '9780385504201', 2003, '1st Edition', 'A symbologist uncovers a religious mystery that could shake the foundations of Christianity.', 454),
+('Half of a Yellow Sun', '9780007200283', 2006, '1st Edition', 'The story of the Nigerian Civil War and its impact on the lives of five friends.', 448);
+
+INSERT INTO BOOK_AUTHOR (BOOK_ID, AUTHOR_ID) VALUES
+(1, '11111111-1111-1111-1111-111111111111'),
+(2, '11111111-1111-1111-1111-111111111111'),
+(3, '22222222-2222-2222-2222-222222222222'),
+(4, '33333333-3333-3333-3333-333333333333'),
+(5, '33333333-3333-3333-3333-333333333333'),
+(6, '44444444-4444-4444-4444-444444444444'),
+(7, '55555555-5555-5555-5555-555555555555'),
+(8, '66666666-6666-6666-6666-666666666666'),
+(9, '77777777-7777-7777-7777-777777777777'),
+(10, '88888888-8888-8888-8888-888888888888'),
+(11, '99999999-9999-9999-9999-999999999999'),
+(12, 'aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa'),
+(13, 'eeeeeeee-eeee-eeee-eeee-eeeeeeeeeeee'),
+(14, 'dddddddd-dddd-dddd-dddd-dddddddddddd'),
+(15, 'ffffffff-ffff-ffff-ffff-ffffffffffff');
