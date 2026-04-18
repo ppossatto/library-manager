@@ -48,6 +48,7 @@ public class LoginServiceImpl implements LoginService {
     } catch (BadCredentialsException bce) {
       throw new CoreException(CoreExceptionType.BAD_CREDENTIALS_EXCEPTION, bce);
     } catch (Exception e) {
+      log.error(e.getMessage());
       throw new CoreException(CoreExceptionType.GENERIC_ERROR, e);
     }
   }

@@ -1,7 +1,9 @@
 package com.ppossatto.librarymanager.security.config;
 
+import com.ppossatto.librarymanager.exception.enums.SeverityType;
 import com.ppossatto.librarymanager.security.filter.JwtAuthFilter;
 import com.ppossatto.librarymanager.security.userdetails.UserDetailsServiceImpl;
+import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -16,8 +18,14 @@ import org.springframework.security.config.annotation.web.configurers.AbstractHt
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.web.AuthenticationEntryPoint;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.access.AccessDeniedHandler;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import tools.jackson.databind.ObjectMapper;
+
+import java.util.LinkedHashMap;
+import java.util.Map;
 
 @Configuration
 @EnableWebSecurity
@@ -26,6 +34,7 @@ public class SecurityConfig {
 
   private final JwtAuthFilter filter;
   private final UserDetailsServiceImpl userDetailsService;
+  private final ObjectMapper objectMapper;
 
   private static final String ROLE_USER = "USER";
   private static final String ROLE_LIBRARIAN = "LIBRARIAN";
@@ -50,6 +59,11 @@ public class SecurityConfig {
   @Bean
   public SecurityFilterChain securityFilterChain(HttpSecurity http) {
     http.csrf(AbstractHttpConfigurer::disable)
+       .exceptionHandling(exceptions ->
+          exceptions
+             .authenticationEntryPoint(customAuthenticationEntryPoint())
+             .accessDeniedHandler(customAccessDeniedHandler())
+       )
        .authorizeHttpRequests(req -> req
           .requestMatchers("/api/v1/login").permitAll()
           .requestMatchers(HttpMethod.POST, "/api/v1/users").hasRole(ROLE_LIBRARIAN)
@@ -87,5 +101,44 @@ public class SecurityConfig {
           filter, UsernamePasswordAuthenticationFilter.class
        );
     return http.build();
+  }
+
+  @Bean
+  public AuthenticationEntryPoint customAuthenticationEntryPoint() {
+    return ((request, response, authException) -> {
+      response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+      response.setContentType("application/json");
+      response.setCharacterEncoding("UTF-8");
+
+      Map<String, Object> errorResponse = new LinkedHashMap<>();
+      errorResponse.put("severity", SeverityType.WARNING.name());
+
+      String jwtError = (String) request.getAttribute("jwt_error");
+      if (jwtError != null) {
+        errorResponse.put("errorCode", "ERR-94501");
+        errorResponse.put("details", "Invalid or expired token");
+      } else {
+        errorResponse.put("errorCode", "ERR-13409");
+        errorResponse.put("details", "Authentication required");
+      }
+
+      response.getWriter().write(objectMapper.writeValueAsString(errorResponse));
+    });
+  }
+
+  @Bean
+  public AccessDeniedHandler customAccessDeniedHandler() {
+    return (request, response, accessDeniedException) -> {
+      response.setStatus(HttpServletResponse.SC_FORBIDDEN);
+      response.setContentType("application/json");
+      response.setCharacterEncoding("UTF-8");
+
+      Map<String, Object> errorResponse = new LinkedHashMap<>();
+      errorResponse.put("errorCode", "ERR-51290");
+      errorResponse.put("severity", SeverityType.WARNING.name());
+      errorResponse.put("details", "Permission not satisfied to access this resource");
+
+      response.getWriter().write(objectMapper.writeValueAsString(errorResponse));
+    };
   }
 }

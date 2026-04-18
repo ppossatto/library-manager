@@ -83,7 +83,8 @@ public class AuthorsController {
     MDC.put(TRACE_ID, UUID.randomUUID().toString());
     log.info("Create author requested...");
     CreateAuthorResponse response = authorsService.createAuthor(request);
-    return ResponseEntity.created(URI.create("/api/v1/authors/" + response.id())).body(response);
+    return ResponseEntity.created(URI.create("/api/v1/authors/" + response.id()))
+       .contentType(MediaType.APPLICATION_JSON).body(response);
   }
 
   @PatchMapping("{id}")
